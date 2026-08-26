@@ -17,13 +17,13 @@ $prompt  = $placeholder ?? ("What's on your mind, " . e($me['first_name']) . '?'
   </div>
   <div class="composer-actions">
     <button class="composer-action" type="button" data-modal-open="<?= e($modalId) ?>">
-      <span class="g-live"><?= icon('videocall', 22) ?></span> Live video
+      <span class="g-live"><?= icon('videocall', 22) ?></span> <span class="composer-action-label">Live video</span>
     </button>
     <button class="composer-action" type="button" data-modal-open="<?= e($modalId) ?>">
-      <span class="g-photo"><?= icon('photo', 22) ?></span> Photo/video
+      <span class="g-photo"><?= icon('photo', 22) ?></span> <span class="composer-action-label">Photo/video</span>
     </button>
     <button class="composer-action" type="button" data-modal-open="<?= e($modalId) ?>">
-      <span class="g-feeling"><?= icon('emoji', 22) ?></span> Feeling/activity
+      <span class="g-feeling"><?= icon('emoji', 22) ?></span> <span class="composer-action-label">Feeling/activity</span>
     </button>
   </div>
 </div>

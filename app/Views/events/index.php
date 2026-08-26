@@ -43,7 +43,7 @@
               </span>
               <a class="bold clamp-2" href="/events/<?= (int) $event['id'] ?>"><?= e($event['title']) ?></a>
               <?php if (!empty($event['location'])): ?>
-                <span class="small muted truncate"><?= icon('location', 12) ?> <?= e($event['location']) ?></span>
+                <span class="small muted truncate"><?= icon('location', 12, 'text-icon') ?><?= e($event['location']) ?></span>
               <?php endif; ?>
               <span class="small muted"><?= (int) $event['going_count'] ?> going &middot; <?= (int) $event['interested_count'] ?> interested</span>
               <form method="post" action="/events/<?= (int) $event['id'] ?>/rsvp" class="mt-8">

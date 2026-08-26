@@ -81,6 +81,9 @@ a:hover { text-decoration: underline; }
 img { max-width: 100%; display: block; }
 button { font-family: inherit; font-size: inherit; cursor: pointer; }
 svg { display: block; flex: none; }
+
+/* Icons rendered inside a run of text, rather than as a flex child. */
+.text-icon { display: inline-block; vertical-align: -2px; margin-right: 4px; }
 h1, h2, h3, h4 { margin: 0; }
 p { margin: 0 0 8px; }
 p:last-child { margin-bottom: 0; }
@@ -209,6 +212,8 @@ p:last-child { margin-bottom: 0; }
 .badge {
   position: absolute;
   top: -2px; right: -2px;
+  /* The badge sits over its button's corner - never let it swallow the click. */
+  pointer-events: none;
   min-width: 18px; height: 18px;
   padding: 0 5px;
   border-radius: 9px;
@@ -528,6 +533,12 @@ p:last-child { margin-bottom: 0; }
 .composer-action .g-live { color: #f3425f; }
 .composer-action .g-photo { color: #45bd62; }
 .composer-action .g-feeling { color: #f7b928; }
+
+/* On a phone the three labels do not fit beside their icons - drop to icons only. */
+@media (max-width: 500px) {
+  .composer-action { font-size: 13px; gap: 6px; padding: 0 4px; }
+  .composer-action-label { display: none; }
+}
 
 .composer-textarea {
   width: 100%;
@@ -1195,6 +1206,11 @@ p:last-child { margin-bottom: 0; }
 [data-theme="dark"] .cover { background: linear-gradient(135deg, #3a3b3c, #242526); }
 .cover img { width: 100%; height: 100%; object-fit: cover; }
 .cover-edit { position: absolute; right: 16px; bottom: 16px; }
+/* The cover button has no room for its label on a phone. */
+@media (max-width: 600px) {
+  .cover-edit .btn { padding: 0 10px; }
+  .cover-edit .btn-label { display: none; }
+}
 
 .profile-identity {
   display: flex;
@@ -1512,7 +1528,14 @@ p:last-child { margin-bottom: 0; }
   position: relative;
 }
 .bottom-nav a.is-active { color: var(--blue); }
-.bottom-nav .badge { top: 6px; right: 50%; margin-right: -20px; }
+.bottom-nav a { position: relative; }
+.bottom-nav .badge {
+  top: 6px;
+  right: auto;
+  left: 50%;
+  margin-left: 4px;
+  border-color: var(--card);
+}
 @media (max-width: 899px) { .shell { padding-bottom: 52px; } }
 
 /* =========================================================================

@@ -24,7 +24,7 @@ if ($isAdmin) {
           <?= csrf_field() ?>
           <input type="file" id="group-cover-input" name="cover" accept="image/*" hidden data-auto-submit>
           <button class="btn" type="button" data-trigger-file="#group-cover-input">
-            <?= icon('camera', 18) ?> Edit cover
+            <?= icon('camera', 18) ?> <span class="btn-label">Edit cover</span>
           </button>
         </form>
       <?php endif; ?>
@@ -33,7 +33,7 @@ if ($isAdmin) {
     <div style="padding:16px">
       <h1 style="font-size:32px;font-weight:700"><?= e($group['name']) ?></h1>
       <p class="muted mt-8">
-        <?= icon($group['privacy'] === 'private' ? 'lock' : 'globe', 14, '') ?>
+        <?= icon($group['privacy'] === 'private' ? 'lock' : 'globe', 14, 'text-icon') ?>
         <?= $group['privacy'] === 'private' ? 'Private group' : 'Public group' ?>
         &middot; <?= number_short((int) $memberCount) ?> <?= $memberCount === 1 ? 'member' : 'members' ?>
       </p>

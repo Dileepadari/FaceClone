@@ -22,7 +22,7 @@ $tabs   = [
           <?= csrf_field() ?>
           <input type="file" id="cover-input" name="cover" accept="image/*" hidden data-auto-submit>
           <button class="btn" type="button" data-trigger-file="#cover-input">
-            <?= icon('camera', 18) ?> <?= $cover ? 'Edit cover photo' : 'Add cover photo' ?>
+            <?= icon('camera', 18) ?> <span class="btn-label"><?= $cover ? 'Edit cover photo' : 'Add cover photo' ?></span>
           </button>
         </form>
       <?php endif; ?>
