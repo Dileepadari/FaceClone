@@ -7,11 +7,15 @@
 .env
 .env.*
 
-# Runtime + user generated content
+# Runtime + user generated content.
+# Ignore the contents one level down, not the folders themselves, so the
+# .gitkeep files survive and a fresh clone still has somewhere to write.
 /storage/logs/*
+!/storage/logs/.gitkeep
 /storage/cache/*
-/public/uploads/**/*
-!/public/uploads/**/.gitkeep
+!/storage/cache/.gitkeep
+/public/uploads/*/*
+!/public/uploads/*/.gitkeep
 
 # Build + tooling artefacts
 /dist/
