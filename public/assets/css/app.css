@@ -90,15 +90,31 @@ p:last-child { margin-bottom: 0; }
 
 ::selection { background: #cce0ff; }
 
-/* --- scrollbars ---------------------------------------------------------- */
-.scroll-y { overflow-y: auto; scrollbar-width: thin; }
-.scroll-y::-webkit-scrollbar { width: 8px; }
-.scroll-y::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, .2); border-radius: 4px; }
-[data-theme="dark"] .scroll-y::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .2); }
+/* --- scrollbars ----------------------------------------------------------
+   A single thin, themed treatment for the page and every scrollable pane.
+   Firefox gets scrollbar-color; Chrome and Safari get the ::-webkit rules. */
+:root { --scroll-thumb: rgba(0, 0, 0, .25); --scroll-thumb-hover: rgba(0, 0, 0, .4); --scroll-track: transparent; }
+[data-theme="dark"] { --scroll-thumb: rgba(255, 255, 255, .22); --scroll-thumb-hover: rgba(255, 255, 255, .38); }
+
+* { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) var(--scroll-track); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--scroll-track); }
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: 8px;
+  /* The border fakes padding so the thumb reads as a slim pill. */
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--scroll-thumb-hover); background-clip: content-box; }
+::-webkit-scrollbar-corner { background: transparent; }
+
+.scroll-y { overflow-y: auto; }
 
 /* Hide the scrollbar while still allowing wheel/touch scrolling. */
 .scroll-x { overflow-x: auto; scrollbar-width: none; }
-.scroll-x::-webkit-scrollbar { display: none; }
+.scroll-x::-webkit-scrollbar { display: none; height: 0; }
 
 /* =========================================================================
    Top bar
@@ -110,7 +126,10 @@ p:last-child { margin-bottom: 0; }
   background: var(--card);
   box-shadow: var(--shadow-1);
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  /* Outer groups size to their content; the nav centres in what is left, which
+     keeps the gap on either side of it equal instead of merely centring the nav
+     in the viewport (which reads as left-heavy, the left group being wider). */
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   padding: 0 16px;
   z-index: 400;
@@ -150,9 +169,9 @@ p:last-child { margin-bottom: 0; }
   border-radius: 20px;
   background: var(--surface-2);
   color: var(--text-2);
+  width: 240px;
   min-width: 40px;
-  max-width: 240px;
-  flex: 1;
+  flex: none;
 }
 .search-pill input {
   border: 0;
@@ -164,12 +183,13 @@ p:last-child { margin-bottom: 0; }
   min-width: 0;
 }
 .search-pill input::placeholder { color: var(--text-2); }
-@media (max-width: 899px) { .search-pill { max-width: 40px; padding: 0 10px; } .search-pill input { display: none; } }
+@media (max-width: 899px) { .search-pill { width: 40px; padding: 0 10px; } .search-pill input { display: none; } }
 
-.topbar-nav { display: none; gap: 4px; }
-@media (min-width: 900px) { .topbar-nav { display: flex; } }
+.topbar-nav { display: flex; gap: 4px; justify-self: center; min-width: 0; }
 .topbar-nav a {
-  width: 112px;
+  /* Tabs give up width as the viewport narrows rather than overflowing the
+     centre column and colliding with the groups either side. */
+  width: clamp(56px, 8.5vw, 112px);
   height: 48px;
   display: grid;
   place-items: center;
@@ -187,9 +207,12 @@ p:last-child { margin-bottom: 0; }
   border-radius: 2px 2px 0 0;
   background: var(--blue);
 }
-.topbar-nav .pill-count {
-  position: absolute;
-  top: 4px; right: 26px;
+.topbar-nav .pill-count { position: absolute; top: 4px; right: 18%; }
+
+/* Below the desktop breakpoint the tabs go away, but the nav element stays a
+   grid item - remove it and the right-hand group slides into the middle column. */
+@media (max-width: 899px) {
+  .topbar-nav a { display: none; }
 }
 
 .icon-btn {
@@ -304,10 +327,11 @@ p:last-child { margin-bottom: 0; }
   scrollbar-width: thin;
   padding-right: 4px;
 }
-.rail::-webkit-scrollbar { width: 8px; }
-.rail::-webkit-scrollbar-thumb { background: transparent; border-radius: 4px; }
-.rail:hover::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, .2); }
-[data-theme="dark"] .rail:hover::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .2); }
+/* Rails keep their thumb invisible until the pointer is over them. */
+.rail { scrollbar-color: transparent transparent; }
+.rail::-webkit-scrollbar-thumb { background: transparent; }
+.rail:hover { scrollbar-color: var(--scroll-thumb) transparent; }
+.rail:hover::-webkit-scrollbar-thumb { background: var(--scroll-thumb); background-clip: content-box; }
 @media (min-width: 900px) { .rail-left { display: block; } }
 @media (min-width: 1500px) { .rail-right { display: block; } }
 
@@ -791,14 +815,16 @@ p:last-child { margin-bottom: 0; }
    Post card
    ========================================================================= */
 .post { position: relative; }
-.post-head { display: flex; align-items: flex-start; gap: 8px; padding: 12px 16px 0; }
+/* Bottom padding lives on the header so a media-only post (no text block)
+   still gets the same breathing room above its image. */
+.post-head { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; }
 .post-author { font-weight: 600; color: var(--text); }
 .post-author:hover { text-decoration: underline; }
 .post-meta { display: flex; align-items: center; gap: 4px; color: var(--text-2); font-size: 13px; margin-top: 1px; }
 .post-meta a { color: var(--text-2); }
 .post-meta svg { color: var(--text-2); }
 
-.post-body { padding: 4px 16px 12px; }
+.post-body { padding: 0 16px 12px; }
 .post-text { font-size: 15px; line-height: 1.34; white-space: pre-wrap; word-break: break-word; }
 .post-text.is-big { font-size: 24px; line-height: 1.28; }
 .post-bg {
@@ -845,8 +871,8 @@ p:last-child { margin-bottom: 0; }
   border-radius: var(--radius);
   overflow: hidden;
 }
-.post-shared .post-head { padding: 10px 12px 0; }
-.post-shared .post-body { padding: 4px 12px 10px; }
+.post-shared .post-head { padding: 10px 12px; }
+.post-shared .post-body { padding: 0 12px 10px; }
 
 .post-stats {
   display: flex;
@@ -1416,8 +1442,8 @@ p:last-child { margin-bottom: 0; }
   flex: none;
   z-index: 2;
 }
-.thread-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 2px; }
-.thread-foot { padding: 12px 16px; flex: none; border-top: 1px solid var(--divider-soft); }
+.thread-body { flex: 1; overflow-y: auto; padding: 20px 16px 12px; display: flex; flex-direction: column; gap: 10px; }
+.thread-foot { padding: 12px 16px 16px; flex: none; border-top: 1px solid var(--divider-soft); }
 .thread-composer { display: flex; align-items: flex-end; gap: 8px; }
 .thread-input-wrap { flex: 1; background: var(--surface-2); border-radius: 18px; padding: 8px 14px; min-width: 0; }
 .thread-input {
@@ -1432,7 +1458,10 @@ p:last-child { margin-bottom: 0; }
   line-height: 1.35;
 }
 
-.bubble-row { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 2px; }
+.bubble-row { display: flex; gap: 8px; align-items: flex-end; }
+/* Consecutive messages from the same person sit closer together. */
+.bubble-row.is-mine + .bubble-row.is-mine,
+.bubble-row:not(.is-mine) + .bubble-row:not(.is-mine) { margin-top: -7px; }
 .bubble-row.is-mine { flex-direction: row-reverse; }
 .bubble {
   max-width: min(66%, 460px);
