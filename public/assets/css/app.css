@@ -662,7 +662,34 @@ p:last-child { margin-bottom: 0; }
 /* =========================================================================
    Stories
    ========================================================================= */
-.story-rail { display: flex; gap: 8px; padding: 4px; }
+.story-rail-wrap { position: relative; }
+.story-rail { display: flex; gap: 8px; padding: 4px; scroll-behavior: smooth; }
+
+/* Facebook-style arrows over the tray. They only appear when there is somewhere
+   to scroll, and on a touch device the swipe replaces them entirely. */
+.rail-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-2);
+  z-index: 5;
+  opacity: 0;
+  transition: opacity .15s;
+}
+.rail-arrow.prev { left: 6px; }
+.rail-arrow.next { right: 6px; }
+.rail-arrow[hidden] { display: none; }
+.story-rail-wrap:hover .rail-arrow,
+.rail-arrow:focus-visible { opacity: 1; }
+.rail-arrow:hover { background: var(--hover-strong); }
+@media (hover: none) { .rail-arrow { display: none !important; } }
 .story-card {
   position: relative;
   width: 112px;

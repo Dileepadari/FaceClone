@@ -690,6 +690,41 @@
 
   $$('[data-composer]').forEach(initComposer);
 
+  /* ------------------------------------------------------------ story rail */
+
+  $$('[data-story-rail]').forEach((wrap) => {
+    const track = wrap.querySelector('[data-rail-track]');
+    const prev  = wrap.querySelector('[data-rail-prev]');
+    const next  = wrap.querySelector('[data-rail-next]');
+    if (!track || !prev || !next) return;
+
+    function sync() {
+      // 1px of slack absorbs sub-pixel rounding at fractional zoom levels.
+      const max = track.scrollWidth - track.clientWidth;
+      prev.hidden = track.scrollLeft <= 1;
+      next.hidden = track.scrollLeft >= max - 1;
+    }
+
+    // Three cards at a time, which is what one arrow press moves on Facebook.
+    const step = () => Math.max(240, Math.round(track.clientWidth * 0.8));
+
+    prev.addEventListener('click', () => { track.scrollLeft -= step(); });
+    next.addEventListener('click', () => { track.scrollLeft += step(); });
+    track.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+
+    // Turn a vertical wheel into horizontal movement over the tray.
+    track.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      const max = track.scrollWidth - track.clientWidth;
+      if (max <= 0) return;
+      e.preventDefault();
+      track.scrollLeft += e.deltaY;
+    }, { passive: false });
+
+    sync();
+  });
+
   /* --------------------------------------------------------- infinite feed */
 
   const feed = $('[data-feed]');
