@@ -13,6 +13,9 @@ $types     = reaction_types();
 $hasMedia  = !empty($post['media']);
 $bg        = background_style($post['background'] ?? null);
 $isBigText = !$hasMedia && $bg === '' && empty($post['shared']) && mb_strlen((string) $post['content']) <= 90;
+// The neutral Like glyph. It carries data-reaction-glyph so the client can swap it
+// for an emoji and back again as the viewer reacts and un-reacts.
+$likeGlyph = str_replace('<svg', '<svg data-reaction-glyph', icon('like-outline', 18));
 $postUrl   = '/posts/' . $post['id'];
 ?>
 <article class="card post" data-post-id="<?= (int) $post['id'] ?>">
@@ -85,32 +88,27 @@ $postUrl   = '/posts/' . $post['id'];
     <?= view_partial('partials/post-media', ['media' => $post['media'], 'postUrl' => $postUrl]) ?>
   <?php endif; ?>
 
-  <?php if ($summary['total'] > 0 || $post['comment_count'] > 0 || $post['share_count'] > 0): ?>
-  <div class="post-stats">
-    <div class="row" data-reaction-summary<?= $summary['total'] === 0 ? ' class="hidden"' : '' ?>>
-      <?php if ($summary['total'] > 0): ?>
-        <span class="reaction-chips" data-reaction-chips>
-          <?php foreach ($summary['top'] as $type): ?>
-            <span class="reaction-chip"><?= $types[$type]['emoji'] ?? '👍' ?></span>
-          <?php endforeach; ?>
-        </span>
-        <button type="button" data-reactors="/posts/<?= (int) $post['id'] ?>/reactions">
-          <span data-reaction-count><?= number_short((int) $summary['total']) ?></span>
-        </button>
-      <?php endif; ?>
+  <?php /* Always rendered, hidden while empty, so the client can fill it in after a reaction or comment. */ ?>
+  <div class="post-stats<?= ($summary['total'] || $post['comment_count'] || $post['share_count']) ? '' : ' hidden' ?>" data-post-stats>
+    <div class="row<?= $summary['total'] > 0 ? '' : ' hidden' ?>" data-reaction-summary>
+      <span class="reaction-chips" data-reaction-chips>
+        <?php foreach ($summary['top'] as $type): ?>
+          <span class="reaction-chip"><?= $types[$type]['emoji'] ?? '' ?></span>
+        <?php endforeach; ?>
+      </span>
+      <button type="button" data-reactors="/posts/<?= (int) $post['id'] ?>/reactions">
+        <span data-reaction-count><?= $summary['total'] > 0 ? number_short((int) $summary['total']) : '' ?></span>
+      </button>
     </div>
     <div class="row">
-      <?php if ($post['comment_count'] > 0): ?>
-        <button type="button" data-load-comments data-comment-count>
-          <?= (int) $post['comment_count'] ?> <?= $post['comment_count'] === 1 ? 'comment' : 'comments' ?>
-        </button>
-      <?php endif; ?>
+      <button type="button" class="<?= $post['comment_count'] > 0 ? '' : 'hidden' ?>" data-load-comments data-comment-count>
+        <?= (int) $post['comment_count'] ?> <?= $post['comment_count'] === 1 ? 'comment' : 'comments' ?>
+      </button>
       <?php if ($post['share_count'] > 0): ?>
-        <span><?= (int) $post['share_count'] ?> <?= $post['share_count'] === 1 ? 'share' : 'shares' ?></span>
+        <span data-share-count><?= (int) $post['share_count'] ?> <?= $post['share_count'] === 1 ? 'share' : 'shares' ?></span>
       <?php endif; ?>
     </div>
   </div>
-  <?php endif; ?>
 
   <div class="post-actions">
     <div class="grow" style="position:relative;display:flex" data-reaction-holder
@@ -124,11 +122,11 @@ $postUrl   = '/posts/' . $post['id'];
       <button class="post-action grow<?= $mine ? ' is-reacted' : '' ?>" type="button"
               data-reaction-button data-react="<?= $mine ? e($mine) : 'like' ?>"
               data-reaction="<?= $mine ? e($mine) : '' ?>"
-              data-default-glyph='<?= icon('like-outline', 18, 'like-glyph') ?>'>
+              data-default-glyph="<?= e($likeGlyph) ?>">
         <?php if ($mine): ?>
           <span class="emoji" data-reaction-glyph><?= $types[$mine]['emoji'] ?></span>
         <?php else: ?>
-          <?= str_replace('<svg', '<svg data-reaction-glyph', icon('like-outline', 18)) ?>
+          <?= $likeGlyph ?>
         <?php endif; ?>
         <span data-reaction-label><?= $mine ? e($types[$mine]['label']) : 'Like' ?></span>
       </button>

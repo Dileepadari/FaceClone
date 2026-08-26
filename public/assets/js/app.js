@@ -252,6 +252,17 @@
   }, { passive: true });
   document.addEventListener('touchend', () => clearTimeout(pressTimer));
 
+  /** Show the stats row only while it has something in it. */
+  function syncStats(scope) {
+    const stats = scope && scope.querySelector('[data-post-stats]');
+    if (!stats) return;
+    const hasReactions = !stats.querySelector('[data-reaction-summary]').classList.contains('hidden');
+    const countBtn = stats.querySelector('[data-comment-count]');
+    const hasComments = countBtn && !countBtn.classList.contains('hidden');
+    const hasShares = !!stats.querySelector('[data-share-count]');
+    stats.classList.toggle('hidden', !hasReactions && !hasComments && !hasShares);
+  }
+
   function renderReactionSummary(root, summary) {
     const chips = root.querySelector('[data-reaction-chips]');
     const count = root.querySelector('[data-reaction-count]');
@@ -264,11 +275,24 @@
       count.textContent = summary.total > 0 ? String(summary.total) : '';
       count.closest('[data-reaction-summary]')?.classList.toggle('hidden', summary.total === 0);
     }
+    syncStats(root);
+  }
+
+  /** Update the "N comments" button and keep the stats row in step. */
+  function setCommentCount(postEl, n) {
+    const btn = postEl && postEl.querySelector('[data-comment-count]');
+    if (!btn) return;
+    btn.textContent = n + (n === 1 ? ' comment' : ' comments');
+    btn.classList.toggle('hidden', n === 0);
+    syncStats(postEl);
   }
 
   function paintReactionButton(btn, type) {
     const glyph = btn.querySelector('[data-reaction-glyph]');
     const label = btn.querySelector('[data-reaction-label]');
+    // Clicking the button again must remove whatever reaction is currently set,
+    // so it always carries the live type (or 'like' when there is none).
+    btn.dataset.react = type || 'like';
     if (type) {
       btn.classList.add('is-reacted');
       btn.dataset.reaction = type;
@@ -414,8 +438,7 @@
         list.dataset.loaded = '1';
       }
 
-      const counter = postEl.querySelector('[data-comment-count]');
-      if (counter) counter.textContent = data.count + (data.count === 1 ? ' comment' : ' comments');
+      setCommentCount(postEl, data.count);
 
       form.reset();
       input.style.height = 'auto';
@@ -452,8 +475,7 @@
       const comment = btn.closest('[data-comment-id]');
       const postEl = btn.closest('[data-post-id]');
       comment.remove();
-      const counter = postEl && postEl.querySelector('[data-comment-count]');
-      if (counter) counter.textContent = data.count + (data.count === 1 ? ' comment' : ' comments');
+      setCommentCount(postEl, data.count);
       toast('Comment deleted', 'success');
     } catch (err) {
       toast(err.message, 'error');
