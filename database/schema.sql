@@ -5,7 +5,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `notifications`, `messages`, `conversation_participants`, `conversations`,
   `story_views`, `stories`, `saved_posts`, `reactions`, `comments`, `post_media`, `posts`,
   `group_members`, `groups`, `event_attendees`, `events`, `listings`, `blocks`, `follows`,
-  `friendships`, `user_settings`, `remember_tokens`, `users`;
+  `friendships`, `user_settings`, `remember_tokens`, `password_resets`, `users`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `users` (
@@ -61,6 +61,17 @@ CREATE TABLE `remember_tokens` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_token_selector` (`selector`),
   CONSTRAINT `fk_token_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `password_resets` (
+  `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id`    INT UNSIGNED NOT NULL,
+  `token_hash` CHAR(64) NOT NULL,
+  `expires_at` DATETIME NOT NULL,
+  `used_at`    DATETIME DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_reset_token` (`token_hash`),
+  CONSTRAINT `fk_reset_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `friendships` (
