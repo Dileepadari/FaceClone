@@ -85,7 +85,8 @@ switch ($command) {
             seed_database($db, true);
         }
         out('');
-        ok('Ready. Start the app with:  php -S localhost:8000 -t public');
+        ok('Ready. Start the app with:  php -S localhost:8000 -t public server.php');
+        out('(the server.php argument is required - see DEVDOC.md gotchas)');
         break;
 
     case 'seed':
