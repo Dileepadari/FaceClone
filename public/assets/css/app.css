@@ -1112,6 +1112,20 @@ p:last-child { margin-bottom: 0; }
 .notif-time { font-size: 13px; color: var(--blue-text); font-weight: 600; margin-top: 2px; }
 .notif-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--blue); flex: none; align-self: center; }
 
+/* The remove control stays out of the way until the row is hovered or focused,
+   the way Facebook reveals its per-notification menu. */
+.notif-remove {
+  position: absolute;
+  top: 50%;
+  right: 34px;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity .12s;
+}
+.notif-item:hover .notif-remove,
+.notif-remove:focus-within { opacity: 1; }
+@media (hover: none) { .notif-remove { opacity: 1; } }
+
 .typeahead {
   position: absolute;
   top: calc(100% + 6px);
@@ -1326,10 +1340,15 @@ p:last-child { margin-bottom: 0; }
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--card);
+  /* Column flex so the body keeps its height when the grid stretches the card. */
+  display: flex;
+  flex-direction: column;
 }
-.person-card .person-photo { aspect-ratio: 1; background: var(--surface-2); }
+/* The photo is an <a>: it has to be a block for aspect-ratio to apply at all. */
+.person-card .person-photo { display: block; aspect-ratio: 1; background: var(--surface-2); flex: none; }
 .person-card .person-photo img { width: 100%; height: 100%; object-fit: cover; }
-.person-card .person-body { padding: 10px; }
+.person-card .person-body { padding: 10px; flex: 1; display: flex; flex-direction: column; }
+.person-card .person-body .stack { margin-top: auto; }
 .person-card .person-name { font-weight: 600; font-size: 15px; }
 
 .friend-tile { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: var(--radius); }

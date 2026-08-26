@@ -23,7 +23,7 @@
             <p>Reactions, comments, friend requests and group activity all land here.</p></div>
         <?php else: ?>
           <?php foreach ($notifications as $n): ?>
-            <div style="position:relative">
+            <div class="notif-item" style="position:relative">
               <a class="notif-row<?= $n['is_read'] ? '' : ' is-unread' ?>" href="/notifications/<?= (int) $n['id'] ?>/open">
                 <span class="notif-avatar">
                   <img class="avatar avatar-60" src="<?= e(avatar_url($n['actor'])) ?>" alt="">
@@ -37,8 +37,7 @@
                 </span>
                 <?php if (!$n['is_read']): ?><span class="notif-dot"></span><?php endif; ?>
               </a>
-              <form method="post" action="/notifications/<?= (int) $n['id'] ?>/delete"
-                    style="position:absolute;top:8px;right:28px">
+              <form class="notif-remove" method="post" action="/notifications/<?= (int) $n['id'] ?>/delete">
                 <?= csrf_field() ?>
                 <button class="icon-btn" style="background:none;width:28px;height:28px" type="submit"
                         aria-label="Remove notification"><?= icon('close', 14) ?></button>
