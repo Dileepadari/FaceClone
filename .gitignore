@@ -1,0 +1,35 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Local configuration (never commit credentials)
+/config/config.local.php
+.env
+.env.*
+
+# Runtime + user generated content
+/storage/logs/*
+/storage/cache/*
+/public/uploads/**/*
+!/public/uploads/**/.gitkeep
+
+# Build + tooling artefacts
+/dist/
+/build/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# OS + editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Merge + patch leftovers
+*.orig
+*.rej
+*.bak
