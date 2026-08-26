@@ -1,0 +1,33 @@
+# Front-controller rewrite for Apache. Point the vhost DocumentRoot at this
+# directory and enable mod_rewrite.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Serve existing files and directories untouched.
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Everything else goes through the front controller.
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Never execute anything that was uploaded.
+<Directory "uploads">
+    php_flag engine off
+    Options -ExecCGI
+</Directory>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+</IfModule>

@@ -32,7 +32,7 @@ $request = new Request();
 
 // Keep presence fresh without a query on every single hit.
 if (Auth::check() && (Session::get('_presence_at', 0) < time() - 60)) {
-    App\Models\User::touchLastSeen((int) Auth::id());
+    \App\Models\User::touchLastSeen((int) Auth::id());
     Session::set('_presence_at', time());
 }
 

@@ -132,7 +132,8 @@ p:last-child { margin-bottom: 0; }
   flex: none;
 }
 .brand-mark img { width: 26px; height: 26px; }
-.logo-mono { filter: brightness(0) saturate(100%) invert(32%) sepia(88%) saturate(2476%) hue-rotate(202deg) brightness(97%) contrast(96%); }
+.logo-mono { filter: brightness(0); }
+[data-theme="dark"] .logo-mono { filter: brightness(0) invert(1); }
 .brand-name { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -.3px; display: none; }
 @media (min-width: 1100px) { .brand-name { display: block; } }
 

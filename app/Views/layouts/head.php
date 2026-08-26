@@ -14,7 +14,7 @@ $__theme = $__me ? UserSetting::forUser((int) $__me['id'])['theme'] : 'light';
 <meta name="csrf-token" content="<?= e(csrf_token()) ?>">
 <meta name="description" content="FaceClone is a social network for sharing posts, stories, photos and messages with friends.">
 <title><?= e($title ?? 'FaceClone') ?></title>
-<link rel="icon" href="<?= asset('assets/img/favicon.svg') ?>" type="image/svg+xml">
+<link rel="icon" href="<?= asset('assets/img/logo-mark.png') ?>" type="image/png">
 <link rel="apple-touch-icon" href="<?= asset('assets/img/logo-mark.png') ?>">
 <link rel="stylesheet" href="<?= asset('assets/css/app.css') ?>">
 <script>
