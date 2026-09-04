@@ -29,9 +29,9 @@ $args    = array_values(array_filter(array_slice($argvv, 2), static fn($a) => !s
 $has     = static fn(string $flag) => in_array('--' . $flag, $flags, true);
 
 function out(string $line = ''): void  { fwrite(STDOUT, $line . PHP_EOL); }
-function ok(string $line): void        { out("\033[32m✓\033[0m " . $line); }
+function ok(string $line): void        { out("\033[32mok\033[0m   " . $line); }
 function warn(string $line): void      { out("\033[33m!\033[0m " . $line); }
-function bad(string $line): void       { fwrite(STDERR, "\033[31m✗\033[0m " . $line . PHP_EOL); }
+function bad(string $line): void       { fwrite(STDERR, "\033[31mFAIL\033[0m " . $line . PHP_EOL); }
 
 // doctor runs before boot so it can report a failed connection usefully.
 if ($command === 'doctor') {

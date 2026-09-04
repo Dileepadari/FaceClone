@@ -1,3 +1,5 @@
+<!-- Generated from README.md by scripts/build-light-readme.php. Do not edit by hand. -->
+
 <div align="center">
 
 <picture>
@@ -21,7 +23,7 @@
 
 **[Developer documentation](./DEVDOC.md)** · [Features](#features) · [Getting started](#getting-started)
 
-<p><b>Dark mode</b> · <a href="./README-light.md">View this page in light mode</a></p>
+<p><b>Light mode</b> · <a href="./README.md">View this page in dark mode</a></p>
 
 </div>
 
@@ -66,34 +68,34 @@ is the only reason a codebase like this is worth reading.
 
 ## Screenshots
 
-Every image is a real 1440x900 viewport render against the seeded demo data. This page shows **dark mode**; the same gallery in light mode is at **[README-light.md](./README-light.md)**.
+Every image is a real 1440x900 viewport render against the seeded demo data. This page shows **light mode**; the same gallery in dark mode is at **[README.md](./README.md)**.
 
 <table>
   <tr>
     <td width="33%" valign="top">
-      <img src="./docs/screenshots/dark/01-feed.png" alt="The news feed with the story rail, composer and a post" loading="lazy">
+      <img src="./docs/screenshots/light/01-feed.png" alt="The news feed with the story rail, composer and a post" loading="lazy">
       <p align="center"><b>Feed</b><br><sub>Stories, composer, and posts filtered by audience.</sub></p>
     </td>
     <td width="33%" valign="top">
-      <img src="./docs/screenshots/dark/02-profile.png" alt="A profile page with cover photo, intro panel and posts" loading="lazy">
+      <img src="./docs/screenshots/light/02-profile.png" alt="A profile page with cover photo, intro panel and posts" loading="lazy">
       <p align="center"><b>Profile</b><br><sub>Cover, intro, and the tabs for friends, photos and groups.</sub></p>
     </td>
     <td width="33%" valign="top">
-      <img src="./docs/screenshots/dark/06-friends.png" alt="Friend requests and people you may know" loading="lazy">
+      <img src="./docs/screenshots/light/06-friends.png" alt="Friend requests and people you may know" loading="lazy">
       <p align="center"><b>Friends</b><br><sub>Requests, suggestions by mutuals, and the full list.</sub></p>
     </td>
   </tr>
   <tr>
     <td width="33%" valign="top">
-      <img src="./docs/screenshots/dark/03-groups.png" alt="Groups you have joined and suggestions" loading="lazy">
+      <img src="./docs/screenshots/light/03-groups.png" alt="Groups you have joined and suggestions" loading="lazy">
       <p align="center"><b>Groups</b><br><sub>Membership drives who can see what was posted where.</sub></p>
     </td>
     <td width="33%" valign="top">
-      <img src="./docs/screenshots/dark/04-marketplace.png" alt="Marketplace listings by category with prices and locations" loading="lazy">
+      <img src="./docs/screenshots/light/04-marketplace.png" alt="Marketplace listings by category with prices and locations" loading="lazy">
       <p align="center"><b>Marketplace</b><br><sub>Listings by category, with prices and locations.</sub></p>
     </td>
     <td width="33%" valign="top">
-      <img src="./docs/screenshots/dark/05-events.png" alt="Upcoming events with going and interested counts" loading="lazy">
+      <img src="./docs/screenshots/light/05-events.png" alt="Upcoming events with going and interested counts" loading="lazy">
       <p align="center"><b>Events</b><br><sub>Going and interested, counted per event.</sub></p>
     </td>
   </tr>
@@ -106,15 +108,15 @@ Each image is a single render at that exact viewport, not a scaled-down desktop 
 <table>
   <tr>
     <td width="28%" valign="top">
-      <img src="./docs/screenshots/responsive/dark/mobile-feed.png" alt="The feed on a 390x844 phone viewport with a bottom tab bar" loading="lazy">
+      <img src="./docs/screenshots/responsive/light/mobile-feed.png" alt="The feed on a 390x844 phone viewport with a bottom tab bar" loading="lazy">
       <p align="center"><b>Phone, 390x844</b><br><sub>The rails collapse and navigation moves to a bottom bar.</sub></p>
     </td>
     <td width="28%" valign="top">
-      <img src="./docs/screenshots/responsive/dark/mobile-profile.png" alt="A profile on a 390x844 phone viewport" loading="lazy">
+      <img src="./docs/screenshots/responsive/light/mobile-profile.png" alt="A profile on a 390x844 phone viewport" loading="lazy">
       <p align="center"><b>Phone, profile</b><br><sub>Cover, avatar and actions stack into one column.</sub></p>
     </td>
     <td width="44%" valign="top">
-      <img src="./docs/screenshots/responsive/dark/tablet-marketplace.png" alt="Marketplace on an 820x950 tablet viewport" loading="lazy">
+      <img src="./docs/screenshots/responsive/light/tablet-marketplace.png" alt="Marketplace on an 820x950 tablet viewport" loading="lazy">
       <p align="center"><b>Tablet, 820x950</b><br><sub>The sidebar gives way and listings widen to four columns.</sub></p>
     </td>
   </tr>

@@ -129,6 +129,10 @@ function background_style(?string $key): string
 function reaction_types(): array
 {
     return [
+        // These are the reactions themselves, not decoration: a reaction set is
+        // emoji by definition, the same way a Like button is a thumb. They are
+        // the one place in this codebase where a literal emoji is correct, and
+        // an icon set would change the product rather than tidy it.
         'like'  => ['emoji' => '👍', 'label' => 'Like',  'color' => '#1877f2'],
         'love'  => ['emoji' => '❤️', 'label' => 'Love',  'color' => '#f33e58'],
         'care'  => ['emoji' => '🥰', 'label' => 'Care',  'color' => '#f7b125'],

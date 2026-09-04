@@ -42,6 +42,14 @@ final class Router
         $path   = rtrim($request->path(), '/') ?: '/';
         $method = $request->method();
 
+        // HEAD must work wherever GET does (RFC 9110). Nothing registers HEAD
+        // routes, so without this every HEAD request fell through to the
+        // "wrong verb" branch and answered 404, which breaks health checks,
+        // link checkers and anything that probes before fetching.
+        if ($method === 'HEAD') {
+            $method = 'GET';
+        }
+
         foreach ($this->routes[$method] ?? [] as $route) {
             if (!preg_match($route['regex'], $path, $matches)) {
                 continue;
@@ -63,9 +71,10 @@ final class Router
             }
             foreach ($routes as $route) {
                 if (preg_match($route['regex'], $path)) {
-                    http_response_code(405);
-                    header('Allow: ' . $otherMethod);
-                    Response::notFound('That action uses a different request method.');
+                    // Response::notFound() sets 404 unconditionally, so setting
+                    // 405 here and then calling it shipped a 404 with an Allow
+                    // header: the opposite of what the comment above promises.
+                    Response::methodNotAllowed($otherMethod);
                 }
             }
         }

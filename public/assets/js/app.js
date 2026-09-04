@@ -204,6 +204,8 @@
   /* ------------------------------------------------------------- reactions */
 
   const REACTIONS = {
+    // Mirrors reaction_types() in app/Core/helpers.php. The emoji here are the
+    // reactions themselves, not decoration, which is why they are literal.
     like:  { emoji: '👍', label: 'Like' },
     love:  { emoji: '❤️', label: 'Love' },
     care:  { emoji: '🥰', label: 'Care' },
@@ -788,7 +790,14 @@
               '<br><span class="menu-sub">' + r.sub + '</span></span></a>'
             ).join('') +
             '<a class="menu-item" href="/search?q=' + encodeURIComponent(term) + '">' +
-            '<span class="menu-glyph">🔍</span><span class="grow">See all results</span></a>';
+            // Same search glyph the server renders through icon('search'), inlined
+            // because this row is built in JS. An emoji here would not take the
+            // menu's colour and would render differently on every platform.
+            '<span class="menu-glyph">' +
+            '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">' +
+            '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+            'd="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14m5.2 12.2L21 21"/></svg>' +
+            '</span><span class="grow">See all results</span></a>';
           }
           panel.classList.add('is-open');
         } catch (e) { /* typeahead failures stay silent */ }

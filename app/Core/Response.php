@@ -29,6 +29,18 @@ final class Response
         exit;
     }
 
+    /**
+     * The path exists but not under this verb. Says so with a 405 and the Allow
+     * header the spec requires, rather than pretending the path is missing.
+     */
+    public static function methodNotAllowed(string $allowed): never
+    {
+        http_response_code(405);
+        header('Allow: ' . $allowed);
+        View::render('errors/404', ['message' => 'That action uses a different request method.'], 'layouts/bare');
+        exit;
+    }
+
     public static function forbidden(string $message = 'You do not have access to this content'): never
     {
         http_response_code(403);

@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Lint and install
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mariadb:11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: faceclone
+          MARIADB_USER: faceclone
+          MARIADB_PASSWORD: faceclone
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # 8.1 is the floor the README promises; 8.3 is what development uses.
+        php: ["8.1", "8.3"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pdo_mysql, gd, mbstring, fileinfo, json
+          coverage: none
+
+      - name: Syntax check every PHP file
+        run: |
+          status=0
+          while IFS= read -r file; do
+            php -l "$file" > /dev/null || status=1
+          done < <(git ls-files '*.php')
+          exit $status
+
+      # doctor checks extensions, writable paths and the connection, so it
+      # fails on a missing extension rather than on a confusing runtime error.
+      - name: Environment check
+        run: php bin/console.php doctor
+
+      # install --seed exercises the schema and every seeder against a real
+      # database. There is no test suite, so this is what proves the app boots.
+      - name: Install the schema and seed
+        run: php bin/console.php install --seed
+
+      # Running it twice must not duplicate or crash.
+      - name: Seed is repeatable
+        run: php bin/console.php seed --force
+
+      - name: Boot the app and check a page renders
+        run: |
+          php -S 127.0.0.1:8000 -t public server.php &
+          for _ in $(seq 1 30); do
+            curl -sf -o /dev/null http://127.0.0.1:8000/login && break
+            sleep 1
+          done
+          curl -sf -o /dev/null http://127.0.0.1:8000/login
+          # HEAD must work wherever GET does, and a wrong verb must say 405.
+          test "$(curl -s -o /dev/null -w '%{http_code}' -I http://127.0.0.1:8000/login)" = "200"
+          test "$(curl -s -o /dev/null -w '%{http_code}' -X DELETE http://127.0.0.1:8000/login)" = "405"
+          # The security headers added with those fixes must stay on.
+          curl -sI http://127.0.0.1:8000/login | grep -qi '^x-frame-options: DENY'
+          curl -sI http://127.0.0.1:8000/login | grep -qi '^x-content-type-options: nosniff'

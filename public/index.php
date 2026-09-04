@@ -26,6 +26,22 @@ try {
     exit;
 }
 
+/*
+ * Security headers, sent on every response before anything writes a body.
+ *
+ * A social site is a clickjacking target in a way a brochure page is not: the
+ * whole surface is one-click actions (react, follow, accept, delete) behind an
+ * already-authenticated session, which is exactly what a transparent iframe over
+ * a decoy page is for. Nothing here embeds FaceClone anywhere, so DENY.
+ *
+ * A Content-Security-Policy is the obvious next one and is deliberately not here
+ * yet: the views use inline styles and inline handlers in enough places that
+ * adding one blind would break pages rather than protect them. See not_for_you.md.
+ */
+header('X-Frame-Options: DENY');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
 Session::start();
 
 $request = new Request();

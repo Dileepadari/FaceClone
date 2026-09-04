@@ -183,7 +183,20 @@ p:last-child { margin-bottom: 0; }
   min-width: 0;
 }
 .search-pill input::placeholder { color: var(--text-2); }
-@media (max-width: 899px) { .search-pill { width: 40px; padding: 0 10px; } .search-pill input { display: none; } }
+/*
+ * Collapse the search box to its icon on narrow screens, but only in the
+ * topbar, where space is genuinely contested and a dedicated mobile search
+ * entry point exists.
+ *
+ * This was unscoped, and .search-pill is reused by the marketplace filter and
+ * the messages filter, where it is the only way to search that page. Below
+ * 900px both became a 40px stub with the input display:none and nothing to
+ * reveal it, so searching those pages was impossible on a tablet or a phone.
+ */
+@media (max-width: 899px) {
+  .topbar .search-pill { width: 40px; padding: 0 10px; }
+  .topbar .search-pill input { display: none; }
+}
 
 .topbar-nav { display: flex; gap: 4px; justify-self: center; min-width: 0; }
 .topbar-nav a {
